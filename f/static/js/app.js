@@ -6,7 +6,6 @@ function init () {
       var names = ((data.names)).slice(0,10);
       var n = names.slice(0,10);
       console.log(names);
-      
       var samples = data.samples;
       var otuids = (samples.map(item => item.otu_ids)); 
       var otuids10 = otuids[0].slice(0,10);
@@ -17,6 +16,14 @@ function init () {
       var label10 = labOuid[0].slice(0,10);
       var labels = modifyLabels(label10);
       // console.log(labels);
+      var selectOpt = d3.select("#selDataset");
+      var selectValues = data.names;
+      selectValues.forEach((value) => {
+        selectOpt
+        .append("option")
+        .text(value)
+        .property("value",value)
+        });
 
       // H-Bar plot
       var barData = [{
@@ -56,21 +63,27 @@ function init () {
       Plotly.newPlot("bubble",data1, layout1);
 
       // MetaData
-      var metadata = data.metadata[0]
-      console.log(metadata);
+      var metadata1 = data.metadata
+      idx = metadata1.map(item=>item.id);
+      ethnicityx = metadata1.map(item=>item.ethnicity);
+      genderx = metadata1.map(item=>item.gender);
+      agex = metadata1.map(item=>item.age);
+      locationx = metadata1.map(item=>item.location);
+      bbtypex = metadata1.map(item=>item.bbtype);
+      wfreqx = metadata1.map(item=>item.wfreq);
+      console.log(idx[0]);
       var list = d3.select("#sample-metadata");
       list.html("");
-      list.append("artilce").text(`id: ${metadata.id}`);
-      list.append("article").text(`ethnicity: ${metadata.ethnicity}`);
-      list.append("article").text(`gender: ${metadata.gender}`);
-      list.append("article").text(`age: ${metadata.age}`);
-      list.append("article").text(`location: ${metadata.location}`);
-      list.append("article").text(`bbtype: ${metadata.bbtype}`);
-      list.append("article").text(`wfreq: ${metadata.wfreq}`);
-
-      // Guage chart
-      var wfreq = metadata.wfreq;
+      list.append("artilce").text(`id: ${idx[0]}`);
+      list.append("article").text(`ethnicity: ${ethnicityx[0]}`);
+      list.append("article").text(`gender: ${genderx[0]}`);
+      list.append("article").text(`age: ${agex[0]}`);
+      list.append("article").text(`location: ${locationx[0]}`);
+      list.append("article").text(`bbtype: ${bbtypex[0]}`);
+      list.append("article").text(`wfreq: ${wfreqx[0]}`);
       
+      // Guage chart
+      var wfreq = wfreqx[0];
       // Enter the Washing Frequency Between 0 and 180
       let level = parseFloat(wfreq) * 20;
   
@@ -160,7 +173,7 @@ function init () {
 
       })
 }
-
+init();
 
 // function to modify the yaxis ticks
 function modifyYaxisName(z){
@@ -200,16 +213,15 @@ function metaDemo(select){
   d3.json("f/data/samples.json").then((data)=> {
       var metaSelect = (data.metadata).filter(item => item.id==select);
       console.log(metaSelect)
-      var sortMeta = metaSelect.sort((a, b) => (a.id) - (b.id));
       var list = d3.select("#sample-metadata");
       list.html("");
-      list.append("artilce").text(`id: ${sortMeta[0].id}`);
-      list.append("article").text(`ethnicity: ${sortMeta[0].ethnicity}`);
-      list.append("article").text(`gender: ${sortMeta[0].gender}`);
-      list.append("article").text(`age: ${sortMeta[0].age}`);
-      list.append("article").text(`location: ${sortMeta[0].location}`);
-      list.append("article").text(`bbtype: ${sortMeta[0].bbtype}`);
-      list.append("article").text(`wfreq: ${sortMeta[0].wfreq}`);
+      list.append("artilce").text(`id: ${metaSelect[0].id}`);
+      list.append("article").text(`ethnicity: ${metaSelect[0].ethnicity}`);
+      list.append("article").text(`gender: ${metaSelect[0].gender}`);
+      list.append("article").text(`age: ${metaSelect[0].age}`);
+      list.append("article").text(`location: ${metaSelect[0].location}`);
+      list.append("article").text(`bbtype: ${metaSelect[0].bbtype}`);
+      list.append("article").text(`wfreq: ${metaSelect[0].wfreq}`);
 
   })
 }
@@ -280,7 +292,7 @@ function bub(select) {
 
 
 function step(){
-  init();
   update();
+  init();
 };
 step();
